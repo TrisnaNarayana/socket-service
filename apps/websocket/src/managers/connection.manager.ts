@@ -138,25 +138,39 @@ export class ConnectionManager {
     target: { type: 'GLOBAL' | 'ROOM' | 'USER'; recipientId?: string; room?: string };
     data: any;
   }): void {
+    const effectiveAppId = publishInput.appId || publishInput.projectId;
     const message: WSEventMessage = {
       event: WSEventType.CUSTOM_EVENT,
       payload: {
         projectId: publishInput.projectId,
+        appId: effectiveAppId,
         eventName: publishInput.eventName,
+        target: publishInput.target,
         data: publishInput.data,
       },
       timestamp: new Date().toISOString(),
     };
 
     const { type, recipientId, room } = publishInput.target;
-    const effectiveAppId = publishInput.appId || publishInput.projectId;
+    const scopedRoom = room ? buildScopedRoomName(effectiveAppId, room) : '';
+    const formattedRoom = room && !room.startsWith('room:') ? `room:${room}` : room;
+    const scopedFormattedRoom = formattedRoom ? buildScopedRoomName(effectiveAppId, formattedRoom) : '';
+    const data = JSON.stringify(message);
 
-    if (type === 'GLOBAL') {
-      this.broadcast(message);
-    } else if (type === 'ROOM' && room) {
-      this.sendToRoom(room, message, effectiveAppId);
-    } else if (type === 'USER' && recipientId) {
-      this.sendToUser(recipientId, message);
-    }
+    this.activeSockets.forEach((conn) => {
+      const isGlobal = (type === 'GLOBAL');
+      const isTargetRoom = room ? (
+        conn.rooms.has(room) ||
+        conn.rooms.has(scopedRoom) ||
+        (formattedRoom && conn.rooms.has(formattedRoom)) ||
+        (scopedFormattedRoom && conn.rooms.has(scopedFormattedRoom))
+      ) : false;
+      const isTargetUser = (type === 'USER' && recipientId && conn.user.userId === recipientId);
+      const isAdminMonitor = conn.user.role === 'ADMIN' || conn.rooms.has('*') || conn.rooms.has('global-log');
+
+      if ((isGlobal || isTargetRoom || isTargetUser || isAdminMonitor) && conn.socket.readyState === WebSocket.OPEN) {
+        conn.socket.send(data);
+      }
+    });
   }
 }
