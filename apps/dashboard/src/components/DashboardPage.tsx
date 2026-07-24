@@ -9,6 +9,8 @@ import { ApplicationsView } from './ApplicationsView';
 import { ManualGuideView } from './ManualGuideView';
 import { DashboardLog } from './LiveFeedPanel';
 
+import { getWsUrl } from '../config/api.config';
+
 interface DashboardPageProps {
   user: UserDTO;
   token: string;
@@ -16,7 +18,7 @@ interface DashboardPageProps {
 }
 
 export const DashboardPage: React.FC<DashboardPageProps> = ({ user, token, onLogout }) => {
-  const { status, logs: wsLogs, sendMessage, reconnect } = useWebSocket('ws://localhost:4001', token);
+  const { status, logs: wsLogs, sendMessage, reconnect } = useWebSocket(getWsUrl(), token);
   const [activeView, setActiveView] = useState<DashboardView>('overview');
   const [activeRooms, setActiveRooms] = useState<string[]>([]);
   const [extraLogs, setExtraLogs] = useState<DashboardLog[]>([]);

@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { UserDTO } from '@vms/shared';
 
+import { getApiUrl } from '../config/api.config';
+
 interface LoginPageProps {
   onLoginSuccess: (token: string, user: UserDTO) => void;
   onBackToHome?: () => void;
@@ -18,7 +20,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess, onBackToHo
     setLoading(true);
 
     try {
-      const res = await fetch('http://localhost:4000/api/auth/login', {
+      const res = await fetch(`${getApiUrl()}/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
