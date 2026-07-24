@@ -1,10 +1,14 @@
 import React, { useState } from 'react';
+import { getApiUrl, getWsUrl } from '../config/api.config';
 
 type LanguageTab = 'curl' | 'node' | 'python' | 'php';
 
 export const ManualGuideView: React.FC = () => {
   const [activeTab, setActiveTab] = useState<LanguageTab>('curl');
   const [copiedSection, setCopiedSection] = useState<string | null>(null);
+
+  const apiUrl = `${getApiUrl()}/events/publish`;
+  const wsUrl = getWsUrl();
 
   const handleCopy = (id: string, text: string) => {
     navigator.clipboard.writeText(text);
@@ -16,7 +20,7 @@ export const ManualGuideView: React.FC = () => {
     curl: {
       title: 'cURL (Terminal Test)',
       color: '#34d399',
-      code: `curl -X POST http://localhost:4000/api/events/publish \\
+      code: `curl -X POST ${apiUrl} \\
   -H "Content-Type: application/json" \\
   -H "x-app-token: app_token_live_YOUR_STATIC_TOKEN" \\
   -d '{
@@ -30,7 +34,7 @@ export const ManualGuideView: React.FC = () => {
       title: 'Node.js (Fetch API)',
       color: '#60a5fa',
       code: `const publishEvent = async () => {
-  const res = await fetch('http://localhost:4000/api/events/publish', {
+  const res = await fetch('${apiUrl}', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -53,7 +57,7 @@ export const ManualGuideView: React.FC = () => {
       color: '#c084fc',
       code: `import requests
 
-url = "http://localhost:4000/api/events/publish"
+url = "${apiUrl}"
 headers = {
     "Content-Type": "application/json",
     "x-app-token": "app_token_live_YOUR_STATIC_TOKEN"
@@ -72,7 +76,7 @@ print(response.status_code, response.json())`,
       title: 'PHP (cURL Native)',
       color: '#fb7185',
       code: `<?php
-$url = "http://localhost:4000/api/events/publish";
+$url = "${apiUrl}";
 $headers = [
     "Content-Type: application/json",
     "x-app-token: app_token_live_YOUR_STATIC_TOKEN"
@@ -98,10 +102,10 @@ echo $response;
   };
 
   const jsSubscriberCode = `const apiToken = "app_token_live_YOUR_STATIC_TOKEN";
-const ws = new WebSocket(\`ws://localhost:4001?token=\${apiToken}\`);
+const ws = new WebSocket(\`${wsUrl}?token=\${apiToken}\`);
 
 ws.onopen = () => {
-  console.log('Connected to WebSocket Gateway');
+  console.log('Connected to Narsys PulseFlow Gateway');
   
   // Join room:orders
   ws.send(JSON.stringify({
@@ -138,7 +142,7 @@ ws.onmessage = (event) => {
             🚀 1. Cara Publish Message via REST API (Backend Client)
           </h3>
           <span style={{ fontSize: '12px', background: '#eff6ff', border: '1px solid #bfdbfe', color: '#0d47a1', padding: '4px 10px', borderRadius: '6px', fontWeight: 600 }}>
-            POST /api/events/publish
+            POST {apiUrl}
           </span>
         </div>
 
@@ -214,13 +218,13 @@ ws.onmessage = (event) => {
             🎧 2. Cara Subscribe & Menerima Event via WebSocket (Frontend Client)
           </h3>
           <span style={{ fontSize: '12px', background: '#ecfdf5', border: '1px solid #a7f3d0', color: '#059669', padding: '4px 10px', borderRadius: '6px', fontWeight: 600 }}>
-            ws://localhost:4001?token=&lt;STATIC_API_TOKEN&gt;
+            {wsUrl}?token=&lt;STATIC_API_TOKEN&gt;
           </span>
         </div>
 
         <div style={{ fontSize: '14px', color: '#475569', display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '20px' }}>
           <div>
-            <strong style={{ color: '#0f172a' }}>1. Autentikasi Static Token:</strong> Sertakan Static API Token milik aplikasi pada query parameter URL koneksi (<code>ws://localhost:4001?token=app_token_live_...</code>). Tidak memerlukan token JWT user.
+            <strong style={{ color: '#0f172a' }}>1. Autentikasi Static Token:</strong> Sertakan Static API Token milik aplikasi pada query parameter URL koneksi (<code>{wsUrl}?token=app_token_live_...</code>). Tidak memerlukan token JWT user.
           </div>
           <div>
             <strong style={{ color: '#0f172a' }}>2. Join Room (Subscribe):</strong> Setelah koneksi terbuka (<code>onopen</code>), kirim pesan JSON:

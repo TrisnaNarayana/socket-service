@@ -1,6 +1,15 @@
-# Client Integration Guide – VMS WebSocket Gateway & REST API
+# Client Integration Guide – NARSYS PULSEFLOW Gateway & REST API
 
-Panduan ini berisi instruksi lengkap bagi pengembang (*developers*) yang ingin mengintegrasikan aplikasi backend maupun frontend/mobile mereka dengan **VMS WebSocket Gateway**.
+Panduan ini berisi instruksi lengkap bagi pengembang (*developers*) yang ingin mengintegrasikan aplikasi backend maupun frontend/mobile mereka dengan **NARSYS PULSEFLOW Real-Time Infrastructure Platform** (by Narayana System).
+
+---
+
+## Endpoint Server (Produksi vs Development)
+
+| Lingkungan (*Environment*) | Base REST API Endpoint | WebSocket Connection URL |
+| :--- | :--- | :--- |
+| **Produksi (Deployed)** | `https://pulseflow.narayana.web.id/api/events` | `wss://pulseflow.narayana.web.id/ws` |
+| **Lokal (Development)** | `http://localhost:4000/api/events` | `ws://localhost:4001` |
 
 ---
 
@@ -25,7 +34,8 @@ Panduan ini berisi instruksi lengkap bagi pengembang (*developers*) yang ingin m
 ### 1.1 Overview & Autentikasi Static Token
 Service backend dari project lain mempublikasikan event/pesan real-time dengan mengirimkan HTTP POST request ke server REST Backend. Setiap request wajib membawa **Static API Token** milik aplikasi yang telah dibuat dari **Dashboard SaaS**.
 
-* **Base URL**: `http://localhost:4000/api/events`
+* **Base URL Produksi**: `https://pulseflow.narayana.web.id/api/events/publish`
+* **Base URL Dev**: `http://localhost:4000/api/events/publish`
 * **Endpoint**: `POST /publish`
 * **Headers Wajib**:
   ```http
@@ -68,9 +78,9 @@ Body request dikirimkan dalam format JSON dengan struktur sebagai berikut:
 
 ### 1.4 Contoh Kode Pengiriman
 
-#### A. cURL (Terminal Test)
+#### A. cURL (Terminal Test - Produksi)
 ```bash
-curl -X POST http://localhost:4000/api/events/publish \
+curl -X POST https://pulseflow.narayana.web.id/api/events/publish \
   -H "Content-Type: application/json" \
   -H "x-app-token: app_token_live_abc123456789" \
   -d '{
@@ -85,7 +95,7 @@ curl -X POST http://localhost:4000/api/events/publish \
 ```javascript
 const publishEvent = async () => {
   try {
-    const res = await fetch('http://localhost:4000/api/events/publish', {
+    const res = await fetch('https://pulseflow.narayana.web.id/api/events/publish', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -111,7 +121,7 @@ const publishEvent = async () => {
 ```python
 import requests
 
-url = "http://localhost:4000/api/events/publish"
+url = "https://pulseflow.narayana.web.id/api/events/publish"
 headers = {
     "Content-Type": "application/json",
     "x-app-token": "app_token_live_abc123456789"
@@ -157,14 +167,15 @@ print(response.status_code, response.json())
 ## Bagian 2: Cara Subscribe & Menerima Message via WebSocket (Frontend/Mobile Client)
 
 ### 2.1 Koneksi WebSocket & Autentikasi Static Token
-Aplikasi frontend (React, Vue, Web) atau mobile client (Flutter, iOS, Android) terhubung langsung ke **WebSocket Gateway** menggunakan **Static API Token** yang sama dengan backend publisher (atau JWT Token):
+Aplikasi frontend (React, Vue, Web) atau mobile client (Flutter, iOS, Android) terhubung langsung ke **NARSYS PULSEFLOW Gateway** menggunakan **Static API Token** yang sama dengan backend publisher (atau JWT Token):
 
-* **WebSocket Server URL**: `ws://localhost:4001`
+* **WebSocket Server URL Produksi**: `wss://pulseflow.narayana.web.id/ws`
+* **WebSocket Server URL Dev**: `ws://localhost:4001`
 * **Parameter Wajib**: `?token=<STATIC_API_TOKEN>`
 
-Contoh URL Koneksi:
+Contoh URL Koneksi Produksi:
 ```text
-ws://localhost:4001?token=app_token_live_abc123456789
+wss://pulseflow.narayana.web.id/ws?token=app_token_live_abc123456789
 ```
 
 ---
@@ -227,13 +238,13 @@ Saat server WebSocket menerima pesan yang ditargetkan ke room atau user Anda, se
 
 ### 2.4 Contoh Kode Client
 
-#### A. Vanilla JavaScript (Browser Native)
+#### A. Vanilla JavaScript (Browser Native - Produksi)
 ```javascript
 const apiToken = 'app_token_live_abc123456789';
-const ws = new WebSocket(`ws://localhost:4001?token=${apiToken}`);
+const ws = new WebSocket(`wss://pulseflow.narayana.web.id/ws?token=${apiToken}`);
 
 ws.onopen = () => {
-  console.log('Connected to WebSocket Gateway');
+  console.log('Connected to NARSYS PULSEFLOW Gateway');
   
   // Join room:orders
   ws.send(JSON.stringify({
@@ -252,41 +263,6 @@ ws.onmessage = (event) => {
 };
 
 ws.onclose = () => console.log('Disconnected from WebSocket');
-```
-
-#### B. React Custom Hook Example (`useWebSocket.ts`)
-```typescript
-import { useEffect, useRef, useState } from 'react';
-
-export const useWebSocket = (url: string, token: string | null) => {
-  const wsRef = useRef<WebSocket | null>(null);
-  const [messages, setMessages] = useState<any[]>([]);
-
-  useEffect(() => {
-    if (!token) return;
-
-    const ws = new WebSocket(`${url}?token=${token}`);
-    wsRef.current = ws;
-
-    ws.onmessage = (event) => {
-      const data = JSON.parse(event.data);
-      if (data.event === 'custom_event') {
-        setMessages((prev) => [data.payload, ...prev]);
-      }
-    };
-
-    return () => ws.close();
-  }, [url, token]);
-
-  const joinRoom = (room: string) => {
-    wsRef.current?.send(JSON.stringify({
-      event: 'subscribe',
-      payload: { room }
-    }));
-  };
-
-  return { messages, joinRoom };
-};
 ```
 
 ---
