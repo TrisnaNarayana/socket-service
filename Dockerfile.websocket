@@ -13,8 +13,9 @@ COPY packages/shared ./packages/shared
 # Copy websocket app
 COPY apps/websocket ./apps/websocket
 
-# Install dependencies and build
+# Install dependencies, generate Prisma types, and build
 RUN npm install
+RUN npm run db:generate --workspace=@vms/database
 RUN npm run build --workspace=@vms/database
 RUN npm run build --workspace=@vms/shared
 RUN npm run build --workspace=@vms/websocket
