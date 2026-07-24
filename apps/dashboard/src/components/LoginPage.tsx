@@ -59,6 +59,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess, onBackToHo
         minHeight: '100vh',
         padding: '20px',
         position: 'relative',
+        backgroundColor: '#f8fafc',
       }}
     >
       {onBackToHome && (
@@ -68,44 +69,45 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess, onBackToHo
             position: 'absolute',
             top: '24px',
             left: '24px',
-            background: 'rgba(13, 71, 161, 0.3)',
-            border: '1px solid rgba(251, 191, 36, 0.4)',
-            color: '#fbbf24',
+            background: '#ffffff',
+            border: '1px solid #cbd5e1',
+            color: '#0d47a1',
             padding: '8px 16px',
             borderRadius: '8px',
             cursor: 'pointer',
             fontSize: '13px',
             fontWeight: 600,
+            boxShadow: '0 2px 4px rgba(0,0,0,0.03)',
           }}
         >
           ← Kembali ke Landing Page
         </button>
       )}
 
-      <div className="glass-panel" style={{ width: '100%', maxWidth: '420px', padding: '40px' }}>
+      <div className="glass-panel" style={{ width: '100%', maxWidth: '420px', padding: '40px', background: '#ffffff', border: '1px solid #e2e8f0' }}>
         <div style={{ textAlign: 'center', marginBottom: '32px' }}>
           <div
             style={{
-              width: '50px',
-              height: '50px',
+              width: '46px',
+              height: '46px',
               borderRadius: '12px',
-              background: 'linear-gradient(135deg, #0d47a1, #fbbf24)',
+              background: 'linear-gradient(135deg, #0d47a1, #d97706)',
               display: 'inline-flex',
               alignItems: 'center',
               justifyContent: 'center',
-              fontSize: '24px',
+              fontSize: '22px',
               color: '#ffffff',
-              boxShadow: '0 0 20px rgba(251, 191, 36, 0.4)',
+              boxShadow: '0 4px 10px rgba(13, 71, 161, 0.2)',
               marginBottom: '12px',
             }}
           >
             ⚡
           </div>
-          <h2 style={{ fontSize: '26px', fontWeight: 800 }}>
-            VMS <span style={{ color: '#fbbf24' }}>SOCKET</span>
+          <h2 style={{ fontSize: '24px', fontWeight: 900, color: '#0f172a' }}>
+            NARSYS <span style={{ color: '#d97706' }}>PULSEFLOW</span>
           </h2>
-          <p style={{ color: '#94a3b8', fontSize: '13px', marginTop: '4px' }}>
-            Masuk ke SaaS Platform Dashboard
+          <p style={{ color: '#64748b', fontSize: '13px', marginTop: '4px' }}>
+            by Narayana System Platform
           </p>
         </div>
 
@@ -114,9 +116,9 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess, onBackToHo
             style={{
               padding: '12px',
               borderRadius: '8px',
-              backgroundColor: 'rgba(244, 63, 94, 0.1)',
-              border: '1px solid rgba(244, 63, 94, 0.3)',
-              color: '#f43f5e',
+              backgroundColor: '#fff1f2',
+              border: '1px solid #fecdd3',
+              color: '#e11d48',
               fontSize: '13px',
               marginBottom: '20px',
             }}
@@ -127,7 +129,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess, onBackToHo
 
         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
           <div>
-            <label style={{ display: 'block', fontSize: '13px', color: '#94a3b8', marginBottom: '8px' }}>
+            <label style={{ display: 'block', fontSize: '13px', color: '#475569', marginBottom: '8px', fontWeight: 500 }}>
               Email Address
             </label>
             <input
@@ -141,7 +143,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess, onBackToHo
           </div>
 
           <div>
-            <label style={{ display: 'block', fontSize: '13px', color: '#94a3b8', marginBottom: '8px' }}>
+            <label style={{ display: 'block', fontSize: '13px', color: '#475569', marginBottom: '8px', fontWeight: 500 }}>
               Password
             </label>
             <input
@@ -154,7 +156,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess, onBackToHo
             />
           </div>
 
-          <button type="submit" className="btn-gold" disabled={loading} style={{ marginTop: '10px', fontSize: '15px' }}>
+          <button type="submit" className="btn-primary" disabled={loading} style={{ marginTop: '10px', fontSize: '15px' }}>
             {loading ? 'Authenticating...' : 'Sign In to Dashboard'}
           </button>
         </form>

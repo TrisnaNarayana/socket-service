@@ -14,27 +14,27 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeView, onSelectView }) =>
       <div style={{ padding: '0 8px', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '10px' }}>
         <div
           style={{
-            width: '32px',
-            height: '32px',
-            borderRadius: '8px',
-            background: 'linear-gradient(135deg, #0d47a1, #fbbf24)',
+            width: '34px',
+            height: '34px',
+            borderRadius: '10px',
+            background: 'linear-gradient(135deg, #0d47a1, #d97706)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
             fontWeight: 900,
-            fontSize: '16px',
+            fontSize: '18px',
             color: '#ffffff',
-            boxShadow: '0 0 10px rgba(251, 191, 36, 0.4)',
+            boxShadow: '0 2px 8px rgba(13, 71, 161, 0.2)',
           }}
         >
           ⚡
         </div>
         <div>
-          <h2 style={{ fontSize: '18px', fontWeight: 800, letterSpacing: '-0.5px' }}>
-            VMS <span style={{ color: '#fbbf24' }}>SOCKET</span>
+          <h2 style={{ fontSize: '16px', fontWeight: 900, letterSpacing: '-0.5px', color: '#0f172a' }}>
+            NARSYS <span style={{ color: '#d97706' }}>PULSEFLOW</span>
           </h2>
-          <p style={{ color: '#94a3b8', fontSize: '10px', marginTop: '1px' }}>
-            Real-Time SaaS Platform
+          <p style={{ color: '#64748b', fontSize: '10px', marginTop: '1px', fontWeight: 600 }}>
+            by Narayana System
           </p>
         </div>
       </div>

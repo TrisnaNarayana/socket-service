@@ -21,7 +21,7 @@ export const Header: React.FC<HeaderProps> = ({ user, status, activeView, onLogo
       case 'guide':
         return 'Developer Integration Manual & How To Use';
       default:
-        return 'VMS Service Monitor';
+        return 'Narsys PulseFlow Platform';
     }
   };
 
@@ -52,9 +52,9 @@ export const Header: React.FC<HeaderProps> = ({ user, status, activeView, onLogo
   return (
     <header className="header-bar">
       <div>
-        <h2 style={{ fontSize: '18px', fontWeight: 700 }}>{getTitle()}</h2>
-        <span style={{ color: '#9ca3af', fontSize: '12px' }}>
-          Logged in as: <strong style={{ color: '#f3f4f6' }}>{user.name}</strong> ({user.role})
+        <h2 style={{ fontSize: '18px', fontWeight: 800, color: '#0f172a' }}>{getTitle()}</h2>
+        <span style={{ color: '#64748b', fontSize: '12px' }}>
+          Logged in as: <strong style={{ color: '#0f172a' }}>{user.name}</strong> ({user.role})
         </span>
       </div>
 
@@ -63,17 +63,18 @@ export const Header: React.FC<HeaderProps> = ({ user, status, activeView, onLogo
         <button
           onClick={onLogout}
           style={{
-            background: 'rgba(255, 255, 255, 0.05)',
-            border: '1px solid rgba(255, 255, 255, 0.1)',
-            color: '#f3f4f6',
+            background: '#fff1f2',
+            border: '1px solid #fecdd3',
+            color: '#e11d48',
             padding: '8px 16px',
             borderRadius: '8px',
             cursor: 'pointer',
             fontSize: '13px',
-            fontWeight: 500,
+            fontWeight: 600,
+            transition: 'all 0.2s ease',
           }}
         >
-          Logout
+          Logout ➔
         </button>
       </div>
     </header>

@@ -116,10 +116,11 @@ export const ApplicationsView: React.FC = () => {
           style={{
             padding: '12px 16px',
             borderRadius: '8px',
-            background: message.type === 'success' ? 'rgba(16, 185, 129, 0.15)' : 'rgba(244, 63, 94, 0.15)',
-            border: `1px solid ${message.type === 'success' ? '#10b981' : '#f43f5e'}`,
-            color: message.type === 'success' ? '#34d399' : '#fb7185',
+            background: message.type === 'success' ? '#ecfdf5' : '#fff1f2',
+            border: `1px solid ${message.type === 'success' ? '#a7f3d0' : '#fecdd3'}`,
+            color: message.type === 'success' ? '#059669' : '#e11d48',
             fontSize: '14px',
+            fontWeight: 600,
           }}
         >
           {message.text}
@@ -130,12 +131,12 @@ export const ApplicationsView: React.FC = () => {
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
         {/* Form 1: Register Client / Tenant */}
         <div className="glass-panel" style={{ padding: '24px' }}>
-          <h3 style={{ fontSize: '16px', fontWeight: 600, marginBottom: '16px' }}>
+          <h3 style={{ fontSize: '16px', fontWeight: 700, marginBottom: '16px', color: '#0f172a' }}>
             🏢 1. Registrasi Client / Perusahaan Baru
           </h3>
           <form onSubmit={handleCreateClient} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
             <div>
-              <label style={{ display: 'block', fontSize: '12px', color: '#9ca3af', marginBottom: '4px' }}>
+              <label style={{ display: 'block', fontSize: '13px', color: '#475569', marginBottom: '6px', fontWeight: 500 }}>
                 Nama Client / Perusahaan
               </label>
               <input
@@ -148,7 +149,7 @@ export const ApplicationsView: React.FC = () => {
               />
             </div>
             <div>
-              <label style={{ display: 'block', fontSize: '12px', color: '#9ca3af', marginBottom: '4px' }}>
+              <label style={{ display: 'block', fontSize: '13px', color: '#475569', marginBottom: '6px', fontWeight: 500 }}>
                 Email Perusahaan
               </label>
               <input
@@ -160,7 +161,7 @@ export const ApplicationsView: React.FC = () => {
                 required
               />
             </div>
-            <button type="submit" className="btn-primary">
+            <button type="submit" className="btn-primary" style={{ marginTop: '4px' }}>
               Daftarkan Client
             </button>
           </form>
@@ -168,12 +169,12 @@ export const ApplicationsView: React.FC = () => {
 
         {/* Form 2: Create Application */}
         <div className="glass-panel" style={{ padding: '24px' }}>
-          <h3 style={{ fontSize: '16px', fontWeight: 600, marginBottom: '16px' }}>
+          <h3 style={{ fontSize: '16px', fontWeight: 700, marginBottom: '16px', color: '#0f172a' }}>
             📱 2. Buat Aplikasi Baru & Generate Static Token
           </h3>
           <form onSubmit={handleCreateApp} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
             <div>
-              <label style={{ display: 'block', fontSize: '12px', color: '#9ca3af', marginBottom: '4px' }}>
+              <label style={{ display: 'block', fontSize: '13px', color: '#475569', marginBottom: '6px', fontWeight: 500 }}>
                 Pilih Client Induk
               </label>
               <select
@@ -191,7 +192,7 @@ export const ApplicationsView: React.FC = () => {
               </select>
             </div>
             <div>
-              <label style={{ display: 'block', fontSize: '12px', color: '#9ca3af', marginBottom: '4px' }}>
+              <label style={{ display: 'block', fontSize: '13px', color: '#475569', marginBottom: '6px', fontWeight: 500 }}>
                 Nama Aplikasi
               </label>
               <input
@@ -203,7 +204,7 @@ export const ApplicationsView: React.FC = () => {
                 required
               />
             </div>
-            <button type="submit" className="btn-primary" disabled={clients.length === 0}>
+            <button type="submit" className="btn-primary" disabled={clients.length === 0} style={{ marginTop: '4px' }}>
               Buat Aplikasi & Generate API Token
             </button>
           </form>
@@ -212,20 +213,21 @@ export const ApplicationsView: React.FC = () => {
 
       {/* Bottom Table: List of Applications */}
       <div className="glass-panel" style={{ padding: '24px' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-          <h3 style={{ fontSize: '16px', fontWeight: 600 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+          <h3 style={{ fontSize: '16px', fontWeight: 700, color: '#0f172a' }}>
             🔑 Daftar Aplikasi & Static API Tokens ({applications.length})
           </h3>
           <button
             onClick={fetchData}
             style={{
-              background: 'rgba(255, 255, 255, 0.05)',
-              border: '1px solid rgba(255, 255, 255, 0.1)',
-              color: '#9ca3af',
-              padding: '6px 12px',
+              background: '#f1f5f9',
+              border: '1px solid #cbd5e1',
+              color: '#475569',
+              padding: '6px 14px',
               borderRadius: '6px',
               cursor: 'pointer',
               fontSize: '12px',
+              fontWeight: 600,
             }}
           >
             Refresh List
@@ -233,9 +235,9 @@ export const ApplicationsView: React.FC = () => {
         </div>
 
         {loading ? (
-          <div style={{ color: '#9ca3af', textAlign: 'center', padding: '24px' }}>Loading applications...</div>
+          <div style={{ color: '#64748b', textAlign: 'center', padding: '24px' }}>Loading applications...</div>
         ) : applications.length === 0 ? (
-          <div style={{ color: '#6b7280', textAlign: 'center', padding: '24px' }}>
+          <div style={{ color: '#64748b', textAlign: 'center', padding: '24px' }}>
             Belum ada aplikasi yang terdaftar. Gunakan form di atas untuk mendaftarkan client dan aplikasi baru.
           </div>
         ) : (
@@ -244,8 +246,8 @@ export const ApplicationsView: React.FC = () => {
               <div
                 key={app.id}
                 style={{
-                  background: 'rgba(15, 23, 42, 0.6)',
-                  border: '1px solid rgba(255, 255, 255, 0.1)',
+                  background: '#f8fafc',
+                  border: '1px solid #e2e8f0',
                   borderRadius: '12px',
                   padding: '16px 20px',
                   display: 'flex',
@@ -255,29 +257,32 @@ export const ApplicationsView: React.FC = () => {
               >
                 <div>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                    <span style={{ fontSize: '16px', fontWeight: 700 }}>{app.appName}</span>
+                    <span style={{ fontSize: '16px', fontWeight: 800, color: '#0f172a' }}>{app.appName}</span>
                     <span
                       style={{
                         fontSize: '11px',
-                        background: 'rgba(59, 130, 246, 0.2)',
-                        color: '#60a5fa',
+                        background: '#eff6ff',
+                        border: '1px solid #bfdbfe',
+                        color: '#0d47a1',
                         padding: '2px 8px',
                         borderRadius: '4px',
+                        fontWeight: 600,
                       }}
                     >
                       {app.client?.name || 'Client'}
                     </span>
                   </div>
-                  <div style={{ marginTop: '8px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <span style={{ fontSize: '12px', color: '#9ca3af' }}>Static API Token:</span>
+                  <div style={{ marginTop: '10px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    <span style={{ fontSize: '13px', color: '#475569', fontWeight: 500 }}>Static API Token:</span>
                     <code
                       style={{
-                        background: 'rgba(0, 0, 0, 0.5)',
-                        color: '#10b981',
-                        padding: '4px 10px',
+                        background: '#0f172a',
+                        color: '#34d399',
+                        padding: '5px 12px',
                         borderRadius: '6px',
-                        fontSize: '12px',
+                        fontSize: '13px',
                         fontFamily: 'monospace',
+                        fontWeight: 600,
                       }}
                     >
                       {app.apiToken}
@@ -285,12 +290,13 @@ export const ApplicationsView: React.FC = () => {
                     <button
                       onClick={() => handleCopyToken(app.id, app.apiToken)}
                       style={{
-                        background: copiedTokenId === app.id ? '#10b981' : 'rgba(255, 255, 255, 0.1)',
+                        background: copiedTokenId === app.id ? '#059669' : '#0d47a1',
                         color: 'white',
                         border: 'none',
-                        padding: '4px 10px',
+                        padding: '5px 12px',
                         borderRadius: '6px',
                         fontSize: '12px',
+                        fontWeight: 600,
                         cursor: 'pointer',
                       }}
                     >
@@ -303,12 +309,13 @@ export const ApplicationsView: React.FC = () => {
                   <button
                     onClick={() => handleRegenerateToken(app.id)}
                     style={{
-                      background: 'rgba(239, 68, 68, 0.15)',
-                      border: '1px solid rgba(239, 68, 68, 0.3)',
-                      color: '#ef4444',
-                      padding: '6px 12px',
+                      background: '#fff1f2',
+                      border: '1px solid #fecdd3',
+                      color: '#e11d48',
+                      padding: '8px 14px',
                       borderRadius: '8px',
                       fontSize: '12px',
+                      fontWeight: 600,
                       cursor: 'pointer',
                     }}
                   >
