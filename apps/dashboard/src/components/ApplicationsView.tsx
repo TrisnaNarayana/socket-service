@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ApplicationDTO, ClientDTO } from '@vms/shared';
+import { getApiUrl } from '../config/api.config';
 
 export const ApplicationsView: React.FC = () => {
   const [clients, setClients] = useState<ClientDTO[]>([]);
@@ -18,8 +19,8 @@ export const ApplicationsView: React.FC = () => {
     setLoading(true);
     try {
       const [resClients, resApps] = await Promise.all([
-        fetch('http://localhost:4000/api/applications/clients'),
-        fetch('http://localhost:4000/api/applications'),
+        fetch(`${getApiUrl()}/applications/clients`),
+        fetch(`${getApiUrl()}/applications`),
       ]);
 
       const dataClients = await resClients.json();
@@ -42,7 +43,7 @@ export const ApplicationsView: React.FC = () => {
     e.preventDefault();
     setMessage(null);
     try {
-      const res = await fetch('http://localhost:4000/api/applications/clients', {
+      const res = await fetch(`${getApiUrl()}/applications/clients`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name: clientName, email: clientEmail }),
@@ -69,7 +70,7 @@ export const ApplicationsView: React.FC = () => {
       return;
     }
     try {
-      const res = await fetch('http://localhost:4000/api/applications', {
+      const res = await fetch(`${getApiUrl()}/applications`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ clientId: selectedClientId, appName }),
@@ -96,7 +97,7 @@ export const ApplicationsView: React.FC = () => {
   const handleRegenerateToken = async (appId: string) => {
     if (!confirm('Apakah Anda yakin ingin mereset Static API Token aplikasi ini?')) return;
     try {
-      const res = await fetch(`http://localhost:4000/api/applications/${appId}/regenerate-token`, {
+      const res = await fetch(`${getApiUrl()}/applications/${appId}/regenerate-token`, {
         method: 'POST',
       });
       const data = await res.json();

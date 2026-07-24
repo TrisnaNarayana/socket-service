@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { getApiUrl } from '../config/api.config';
 
 interface ApiTesterPanelProps {
   onLog: (type: 'rest_out' | 'system' | 'error', message: string) => void;
@@ -33,7 +34,7 @@ export const ApiTesterPanel: React.FC<ApiTesterPanelProps> = ({ onLog }) => {
 
       onLog('rest_out', `Sending POST /api/events/publish (${targetType})`);
 
-      const res = await fetch('http://localhost:4000/api/events/publish', {
+      const res = await fetch(`${getApiUrl()}/events/publish`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
