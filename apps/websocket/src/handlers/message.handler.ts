@@ -21,7 +21,7 @@ export class MessageHandler {
     }
 
     const { event, payload } = validation.data;
-    logger.debug({ socketId: client.id, event }, 'Received WebSocket event');
+    logger.info({ socketId: client.id, appId: client.appId, event, payload }, '📩 Incoming WebSocket Message Frame');
 
     switch (event) {
       case WSEventType.PING:
