@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { LiveFeedPanel, DashboardLog } from './LiveFeedPanel';
+import { getApiUrl, getWsUrl } from '../config/api.config';
 
 interface GlobalMonitorViewProps {
   status: string;
@@ -34,12 +35,12 @@ export const GlobalMonitorView: React.FC<GlobalMonitorViewProps> = ({
       {/* Left Column: Global Controls & System Stats */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
         <div className="glass-panel" style={{ padding: '24px' }}>
-          <h3 style={{ fontSize: '16px', fontWeight: 600, marginBottom: '16px' }}>
+          <h3 style={{ fontSize: '16px', fontWeight: 700, marginBottom: '16px', color: '#0f172a' }}>
             ⚡ Global Real-Time Event Dispatcher
           </h3>
           <form onSubmit={handleSend} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             <div>
-              <label style={{ display: 'block', fontSize: '12px', color: '#9ca3af', marginBottom: '6px' }}>
+              <label style={{ display: 'block', fontSize: '13px', color: '#475569', marginBottom: '6px', fontWeight: 500 }}>
                 Event Type
               </label>
               <select
@@ -54,7 +55,7 @@ export const GlobalMonitorView: React.FC<GlobalMonitorViewProps> = ({
             </div>
 
             <div>
-              <label style={{ display: 'block', fontSize: '12px', color: '#9ca3af', marginBottom: '6px' }}>
+              <label style={{ display: 'block', fontSize: '13px', color: '#475569', marginBottom: '6px', fontWeight: 500 }}>
                 JSON Payload
               </label>
               <textarea
@@ -75,12 +76,13 @@ export const GlobalMonitorView: React.FC<GlobalMonitorViewProps> = ({
                   type="button"
                   onClick={onReconnect}
                   style={{
-                    background: 'rgba(59, 130, 246, 0.2)',
-                    border: '1px solid #3b82f6',
-                    color: '#3b82f6',
+                    background: '#eff6ff',
+                    border: '1px solid #bfdbfe',
+                    color: '#0d47a1',
                     padding: '10px 16px',
                     borderRadius: '8px',
                     cursor: 'pointer',
+                    fontWeight: 600,
                   }}
                 >
                   Reconnect
@@ -91,21 +93,27 @@ export const GlobalMonitorView: React.FC<GlobalMonitorViewProps> = ({
         </div>
 
         <div className="glass-panel" style={{ padding: '24px' }}>
-          <h3 style={{ fontSize: '16px', fontWeight: 600, marginBottom: '12px' }}>
+          <h3 style={{ fontSize: '16px', fontWeight: 700, marginBottom: '14px', color: '#0f172a' }}>
             📌 System Information & Health
           </h3>
-          <div style={{ fontSize: '13px', color: '#9ca3af', display: 'flex', flexDirection: 'column', gap: '10px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+          <div style={{ fontSize: '13px', color: '#475569', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <span>REST API Server:</span>
-              <code style={{ color: '#10b981' }}>http://localhost:4000</code>
+              <code style={{ background: '#0f172a', color: '#34d399', padding: '3px 8px', borderRadius: '4px', fontFamily: 'monospace', fontWeight: 600 }}>
+                {getApiUrl()}
+              </code>
             </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <span>WebSocket Gateway:</span>
-              <code style={{ color: '#10b981' }}>ws://localhost:4001</code>
+              <code style={{ background: '#0f172a', color: '#34d399', padding: '3px 8px', borderRadius: '4px', fontFamily: 'monospace', fontWeight: 600 }}>
+                {getWsUrl()}
+              </code>
             </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <span>Auth Session Status:</span>
-              <span style={{ color: '#10b981' }}>Active (JWT Valid)</span>
+              <span className="badge badge-success">
+                <span className="status-dot"></span> Active (JWT Valid)
+              </span>
             </div>
           </div>
         </div>
