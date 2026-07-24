@@ -11,13 +11,32 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeView, onSelectView }) =>
   return (
     <aside className="sidebar">
       {/* Brand Logo */}
-      <div style={{ padding: '0 8px', marginBottom: '8px' }}>
-        <h2 style={{ fontSize: '20px', fontWeight: 800, letterSpacing: '-0.5px' }}>
-          VMS <span style={{ color: '#3b82f6' }}>Socket</span>
-        </h2>
-        <p style={{ color: '#9ca3af', fontSize: '11px', marginTop: '2px' }}>
-          Real-Time Monorepo Platform
-        </p>
+      <div style={{ padding: '0 8px', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '10px' }}>
+        <div
+          style={{
+            width: '32px',
+            height: '32px',
+            borderRadius: '8px',
+            background: 'linear-gradient(135deg, #0d47a1, #fbbf24)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontWeight: 900,
+            fontSize: '16px',
+            color: '#ffffff',
+            boxShadow: '0 0 10px rgba(251, 191, 36, 0.4)',
+          }}
+        >
+          ⚡
+        </div>
+        <div>
+          <h2 style={{ fontSize: '18px', fontWeight: 800, letterSpacing: '-0.5px' }}>
+            VMS <span style={{ color: '#fbbf24' }}>SOCKET</span>
+          </h2>
+          <p style={{ color: '#94a3b8', fontSize: '10px', marginTop: '1px' }}>
+            Real-Time SaaS Platform
+          </p>
+        </div>
       </div>
 
       {/* Navigation Items */}

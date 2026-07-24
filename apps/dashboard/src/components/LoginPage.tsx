@@ -3,9 +3,10 @@ import { UserDTO } from '@vms/shared';
 
 interface LoginPageProps {
   onLoginSuccess: (token: string, user: UserDTO) => void;
+  onBackToHome?: () => void;
 }
 
-export const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
+export const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess, onBackToHome }) => {
   const [email, setEmail] = useState('admin@vms.com');
   const [password, setPassword] = useState('password123');
   const [error, setError] = useState('');
@@ -17,7 +18,6 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
     setLoading(true);
 
     try {
-      // Direct mock response if backend offline or fetch call
       const res = await fetch('http://localhost:4000/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -31,7 +31,6 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
 
       onLoginSuccess(data.data.tokens.accessToken, data.data.user);
     } catch (err: any) {
-      // Fallback mock login for demo dashboard if backend server is offline
       if (email && password) {
         const dummyToken = 'dummy-jwt-token-demo';
         const dummyUser: UserDTO = {
@@ -59,15 +58,54 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
         justifyContent: 'center',
         minHeight: '100vh',
         padding: '20px',
+        position: 'relative',
       }}
     >
+      {onBackToHome && (
+        <button
+          onClick={onBackToHome}
+          style={{
+            position: 'absolute',
+            top: '24px',
+            left: '24px',
+            background: 'rgba(13, 71, 161, 0.3)',
+            border: '1px solid rgba(251, 191, 36, 0.4)',
+            color: '#fbbf24',
+            padding: '8px 16px',
+            borderRadius: '8px',
+            cursor: 'pointer',
+            fontSize: '13px',
+            fontWeight: 600,
+          }}
+        >
+          ← Kembali ke Landing Page
+        </button>
+      )}
+
       <div className="glass-panel" style={{ width: '100%', maxWidth: '420px', padding: '40px' }}>
         <div style={{ textAlign: 'center', marginBottom: '32px' }}>
-          <h2 style={{ fontSize: '28px', fontWeight: 700, marginBottom: '8px' }}>
-            VMS <span style={{ color: '#3b82f6' }}>Socket</span>
+          <div
+            style={{
+              width: '50px',
+              height: '50px',
+              borderRadius: '12px',
+              background: 'linear-gradient(135deg, #0d47a1, #fbbf24)',
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: '24px',
+              color: '#ffffff',
+              boxShadow: '0 0 20px rgba(251, 191, 36, 0.4)',
+              marginBottom: '12px',
+            }}
+          >
+            ⚡
+          </div>
+          <h2 style={{ fontSize: '26px', fontWeight: 800 }}>
+            VMS <span style={{ color: '#fbbf24' }}>SOCKET</span>
           </h2>
-          <p style={{ color: '#9ca3af', fontSize: '14px' }}>
-            Boilerplate Real-Time Service Dashboard
+          <p style={{ color: '#94a3b8', fontSize: '13px', marginTop: '4px' }}>
+            Masuk ke SaaS Platform Dashboard
           </p>
         </div>
 
@@ -79,7 +117,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
               backgroundColor: 'rgba(244, 63, 94, 0.1)',
               border: '1px solid rgba(244, 63, 94, 0.3)',
               color: '#f43f5e',
-              fontSize: '14px',
+              fontSize: '13px',
               marginBottom: '20px',
             }}
           >
@@ -89,7 +127,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
 
         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
           <div>
-            <label style={{ display: 'block', fontSize: '13px', color: '#9ca3af', marginBottom: '8px' }}>
+            <label style={{ display: 'block', fontSize: '13px', color: '#94a3b8', marginBottom: '8px' }}>
               Email Address
             </label>
             <input
@@ -103,7 +141,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
           </div>
 
           <div>
-            <label style={{ display: 'block', fontSize: '13px', color: '#9ca3af', marginBottom: '8px' }}>
+            <label style={{ display: 'block', fontSize: '13px', color: '#94a3b8', marginBottom: '8px' }}>
               Password
             </label>
             <input
@@ -116,7 +154,7 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
             />
           </div>
 
-          <button type="submit" className="btn-primary" disabled={loading} style={{ marginTop: '10px' }}>
+          <button type="submit" className="btn-gold" disabled={loading} style={{ marginTop: '10px', fontSize: '15px' }}>
             {loading ? 'Authenticating...' : 'Sign In to Dashboard'}
           </button>
         </form>
