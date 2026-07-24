@@ -91,7 +91,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ user, token, onLog
             onReconnect={reconnect}
           />
         ) : activeView === 'applications' ? (
-          <ApplicationsView />
+          <ApplicationsView logs={combinedLogs} />
         ) : (
           <ManualGuideView />
         )}

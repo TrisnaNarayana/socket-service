@@ -1,12 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { ApplicationDTO, ClientDTO } from '@vms/shared';
 import { getApiUrl } from '../config/api.config';
+import { DashboardLog } from './LiveFeedPanel';
 
-export const ApplicationsView: React.FC = () => {
+interface ApplicationsViewProps {
+  logs?: DashboardLog[];
+}
+
+export const ApplicationsView: React.FC<ApplicationsViewProps> = ({ logs = [] }) => {
   const [clients, setClients] = useState<ClientDTO[]>([]);
   const [applications, setApplications] = useState<ApplicationDTO[]>([]);
   const [loading, setLoading] = useState(false);
   const [copiedTokenId, setCopiedTokenId] = useState<string | null>(null);
+  const [selectedAppForLogs, setSelectedAppForLogs] = useState<ApplicationDTO | null>(null);
 
   // Form states
   const [clientName, setClientName] = useState('');
@@ -109,6 +115,16 @@ export const ApplicationsView: React.FC = () => {
       setMessage({ type: 'error', text: 'Gagal mereset token' });
     }
   };
+
+  // Filter logs for selected app
+  const appLogs = selectedAppForLogs
+    ? logs.filter(
+        (l) =>
+          l.message.includes(selectedAppForLogs.apiToken) ||
+          l.message.includes(selectedAppForLogs.appName) ||
+          l.message.includes(selectedAppForLogs.id)
+      )
+    : [];
 
   return (
     <div style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '24px' }}>
@@ -306,7 +322,22 @@ export const ApplicationsView: React.FC = () => {
                   </div>
                 </div>
 
-                <div>
+                <div style={{ display: 'flex', gap: '8px' }}>
+                  <button
+                    onClick={() => setSelectedAppForLogs(app)}
+                    style={{
+                      background: '#0d47a1',
+                      color: 'white',
+                      border: 'none',
+                      padding: '8px 14px',
+                      borderRadius: '8px',
+                      fontSize: '12px',
+                      fontWeight: 600,
+                      cursor: 'pointer',
+                    }}
+                  >
+                    📡 Log & Integrasi
+                  </button>
                   <button
                     onClick={() => handleRegenerateToken(app.id)}
                     style={{
@@ -328,6 +359,185 @@ export const ApplicationsView: React.FC = () => {
           </div>
         )}
       </div>
+
+      {/* Modal / Inspector Drawer for Client App Logs & Snippets */}
+      {selectedAppForLogs && (
+        <div
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: 'rgba(15, 23, 42, 0.65)',
+            backdropFilter: 'blur(4px)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 9999,
+            padding: '24px',
+          }}
+        >
+          <div
+            style={{
+              background: '#ffffff',
+              borderRadius: '16px',
+              width: '100%',
+              maxWidth: '750px',
+              maxHeight: '85vh',
+              overflowY: 'auto',
+              boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+              padding: '24px',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '20px',
+            }}
+          >
+            {/* Modal Header */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #e2e8f0', paddingBottom: '16px' }}>
+              <div>
+                <h3 style={{ fontSize: '18px', fontWeight: 800, color: '#0f172a' }}>
+                  📊 Client Application Inspector: {selectedAppForLogs.appName}
+                </h3>
+                <p style={{ fontSize: '13px', color: '#64748b', marginTop: '2px' }}>
+                  Client: {selectedAppForLogs.client?.name} ({selectedAppForLogs.client?.email})
+                </p>
+              </div>
+              <button
+                onClick={() => setSelectedAppForLogs(null)}
+                style={{
+                  background: '#f1f5f9',
+                  border: 'none',
+                  borderRadius: '50%',
+                  width: '32px',
+                  height: '32px',
+                  cursor: 'pointer',
+                  fontWeight: 700,
+                  color: '#64748b',
+                }}
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* Static Token Copy */}
+            <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', padding: '14px', borderRadius: '10px' }}>
+              <div style={{ fontSize: '12px', fontWeight: 600, color: '#475569', marginBottom: '6px' }}>
+                🔑 Static Application Token (x-app-token):
+              </div>
+              <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                <code
+                  style={{
+                    flex: 1,
+                    background: '#0f172a',
+                    color: '#34d399',
+                    padding: '8px 12px',
+                    borderRadius: '6px',
+                    fontSize: '13px',
+                    fontFamily: 'monospace',
+                  }}
+                >
+                  {selectedAppForLogs.apiToken}
+                </code>
+                <button
+                  onClick={() => handleCopyToken(selectedAppForLogs.id, selectedAppForLogs.apiToken)}
+                  style={{
+                    background: '#0d47a1',
+                    color: 'white',
+                    border: 'none',
+                    padding: '8px 14px',
+                    borderRadius: '6px',
+                    fontSize: '12px',
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                  }}
+                >
+                  {copiedTokenId === selectedAppForLogs.id ? 'Copied! ✓' : 'Copy'}
+                </button>
+              </div>
+            </div>
+
+            {/* Quick Test Curl Command */}
+            <div>
+              <div style={{ fontSize: '13px', fontWeight: 700, color: '#0f172a', marginBottom: '6px' }}>
+                🚀 Sample REST API Publisher Command for this Client:
+              </div>
+              <pre
+                style={{
+                  background: '#0f172a',
+                  color: '#e2e8f0',
+                  padding: '12px 14px',
+                  borderRadius: '8px',
+                  fontSize: '12px',
+                  overflowX: 'auto',
+                  fontFamily: 'monospace',
+                }}
+              >
+{`curl -X POST ${getApiUrl()}/events/publish \\
+  -H "Content-Type: application/json" \\
+  -H "x-app-token: ${selectedAppForLogs.apiToken}" \\
+  -d '{
+    "projectId": "${selectedAppForLogs.appSlug}",
+    "eventName": "ORDER_PAID",
+    "target": { "type": "ROOM", "room": "events-listener" },
+    "data": { "orderId": "ORD-9982", "amount": 150000 }
+  }'`}
+              </pre>
+            </div>
+
+            {/* Live Stream Event Logs */}
+            <div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                <span style={{ fontSize: '13px', fontWeight: 700, color: '#0f172a' }}>
+                  📡 Live Event Stream Logs ({appLogs.length})
+                </span>
+                <span style={{ fontSize: '11px', color: '#64748b' }}>Filtered by Token & App ID</span>
+              </div>
+
+              <div
+                style={{
+                  background: '#0f172a',
+                  borderRadius: '10px',
+                  padding: '14px',
+                  maxHeight: '220px',
+                  overflowY: 'auto',
+                  fontFamily: 'monospace',
+                  fontSize: '12px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '8px',
+                }}
+              >
+                {appLogs.length === 0 ? (
+                  <div style={{ color: '#64748b', textAlign: 'center', padding: '16px' }}>
+                    Belum ada log aktivitas real-time untuk aplikasi ini. Jalankan cURL di atas untuk mengirim event test.
+                  </div>
+                ) : (
+                  appLogs.map((log) => (
+                    <div
+                      key={log.id}
+                      style={{
+                        padding: '8px 12px',
+                        borderRadius: '6px',
+                        background: 'rgba(59, 130, 246, 0.15)',
+                        borderLeft: '4px solid #3b82f6',
+                        color: '#eff6ff',
+                      }}
+                    >
+                      <div style={{ display: 'flex', justifyContent: 'space-between', color: '#60a5fa', fontSize: '11px' }}>
+                        <span>[{log.type.toUpperCase()}]</span>
+                        <span>{log.timestamp}</span>
+                      </div>
+                      <div style={{ marginTop: '4px', wordBreak: 'break-all' }}>{log.message}</div>
+                    </div>
+                  ))
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
+
