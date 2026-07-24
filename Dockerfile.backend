@@ -13,8 +13,9 @@ COPY packages/shared ./packages/shared
 # Copy backend app
 COPY apps/backend ./apps/backend
 
-# Install dependencies and build
+# Install dependencies, generate Prisma types, and build
 RUN npm install
+RUN npm run db:generate --workspace=@vms/database
 RUN npm run build --workspace=@vms/database
 RUN npm run build --workspace=@vms/shared
 RUN npm run build --workspace=@vms/backend
