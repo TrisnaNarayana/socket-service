@@ -1,0 +1,18 @@
+buatkan issue.md baru , berisi planning untuk implemntasi ini :
+
+sekarang perlu di validasi bagaimana agar antar client tidak bisa saling send message.
+takutnya ada sama2 client membuat room yang sama, misal
+client A membuat room users-9001
+client B membuat room users-9001
+
+nah client A bisa send ke users-9001 dan client B pun bisa send ke users-9001 
+nah hal ini tidak boleh terjadi.
+
+
+note : 
+buatkan tahapan-tahapan penyelesaiannya
+jangan terlalu low level atau detail
+cukup instruksikan secara high level.
+nanti dokumen planning akan digunakan oleh junior programmer atau model ai yang lebih murah
+
+

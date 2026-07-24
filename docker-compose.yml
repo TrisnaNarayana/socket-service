@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+  # 1. REST API Backend Service
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    container_name: vms_backend
+    restart: always
+    ports:
+      - "4000:4000"
+    environment:
+      NODE_ENV: production
+      PORT: 4000
+      DATABASE_URL: "${DATABASE_URL:-postgresql://postgres:password123@host.docker.internal:5432/vms_socket_db?schema=public}"
+      JWT_SECRET: "${JWT_SECRET:-super-secret-jwt-key-vms-2026}"
+      JWT_EXPIRES_IN: "1d"
+      JWT_REFRESH_EXPIRES_IN: "7d"
+      SERVICE_API_KEY: "${SERVICE_API_KEY:-default-service-api-key}"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  # 2. WebSocket Gateway Service
+  websocket:
+    build:
+      context: .
+      dockerfile: Dockerfile.websocket
+    container_name: vms_websocket
+    restart: always
+    ports:
+      - "4001:4001"
+    environment:
+      NODE_ENV: production
+      WS_PORT: 4001
+      DATABASE_URL: "${DATABASE_URL:-postgresql://postgres:password123@host.docker.internal:5432/vms_socket_db?schema=public}"
+      JWT_SECRET: "${JWT_SECRET:-super-secret-jwt-key-vms-2026}"
+      SERVICE_API_KEY: "${SERVICE_API_KEY:-default-service-api-key}"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  # 3. Web Dashboard UI (NGINX)
+  dashboard:
+    build:
+      context: .
+      dockerfile: Dockerfile.dashboard
+    container_name: vms_dashboard
+    restart: always
+    ports:
+      - "5173:80"
+    depends_on:
+      - backend
+      - websocket

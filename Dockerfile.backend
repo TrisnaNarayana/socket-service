@@ -1,0 +1,26 @@
+FROM node:20-alpine AS builder
+
+WORKDIR /app
+
+# Copy root configuration and package files
+COPY package*.json ./
+COPY tsconfig.base.json ./
+
+# Copy packages
+COPY packages/database ./packages/database
+COPY packages/shared ./packages/shared
+
+# Copy backend app
+COPY apps/backend ./apps/backend
+
+# Install dependencies and build
+RUN npm install
+RUN npm run build --workspace=@vms/database
+RUN npm run build --workspace=@vms/shared
+RUN npm run build --workspace=@vms/backend
+
+EXPOSE 4000
+
+ENV NODE_ENV=production
+
+CMD ["node", "apps/backend/dist/server.js"]

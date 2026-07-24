@@ -1,0 +1,27 @@
+{
+  "name": "@vms/websocket",
+  "version": "1.0.0",
+  "private": true,
+  "main": "./dist/server.js",
+  "scripts": {
+    "dev": "tsc-watch --onSuccess \"node dist/server.js\"",
+    "build": "tsc -b",
+    "start": "node dist/server.js",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@vms/database": "*",
+    "@vms/shared": "*",
+    "dotenv": "^16.4.5",
+    "jsonwebtoken": "^9.0.2",
+    "ws": "^8.17.0"
+  },
+  "devDependencies": {
+    "@types/jsonwebtoken": "^9.0.6",
+    "@types/node": "^20.12.7",
+    "@types/ws": "^8.5.10",
+    "tsc-watch": "^6.2.0",
+    "typescript": "^5.4.5",
+    "vitest": "^1.5.2"
+  }
+}
