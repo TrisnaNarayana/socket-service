@@ -122,7 +122,8 @@ export const ApplicationsView: React.FC<ApplicationsViewProps> = ({ logs = [] })
         (l) =>
           l.message.includes(selectedAppForLogs.apiToken) ||
           l.message.includes(selectedAppForLogs.appName) ||
-          l.message.includes(selectedAppForLogs.id)
+          l.message.includes(selectedAppForLogs.id) ||
+          (selectedAppForLogs.appSlug && l.message.includes(selectedAppForLogs.appSlug))
       )
     : [];
 
