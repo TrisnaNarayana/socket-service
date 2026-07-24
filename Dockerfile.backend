@@ -1,5 +1,8 @@
 FROM node:20-alpine AS builder
 
+# Install OpenSSL for Prisma engine compatibility on Alpine Linux
+RUN apk add --no-cache openssl
+
 WORKDIR /app
 
 # Copy root configuration and package files
